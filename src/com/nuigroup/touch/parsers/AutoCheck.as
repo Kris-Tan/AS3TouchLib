@@ -14,18 +14,26 @@ package com.nuigroup.touch.parsers {
 	public class AutoCheck implements ITouchParser {
 		
 		public function AutoCheck() {
-			
 		}
 		
+		/**
+		 * protocol name
+		 */
 		public function get name():String {
 			return TouchProtocol.AUTO;
 		}
 		
+		/**
+		 * no header
+		 */
 		public function get header():String {
 			return null;
 		}
 		
-		
+		/**
+		 * parsing function
+		 * @param	data
+		 */
 		public function parse(data:IDataInput):void {
 			// first - copy message for reuse
 			var read:ByteArray = new ByteArray();

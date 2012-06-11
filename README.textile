@@ -7,6 +7,9 @@ Library allow to add own extensions and data parsers , so You dont have to edit 
 
 h4. How it works : connect to socket , emulate touch using build-in functions or recive (TouchLib can automaticly choose data type) and parse bytes  , dispatch events on display list just like mouse or touch interaction .
 
+.
+
+h4. Library is not finished and may throw errors .
 
 .
 
