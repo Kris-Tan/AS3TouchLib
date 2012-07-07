@@ -9,7 +9,7 @@ h4. How it works : connect to socket , emulate touch using build-in functions or
 
 .
 
-h4. Library is not finished and may throw errors .
+h4. This is stable release .
 
 .
 
