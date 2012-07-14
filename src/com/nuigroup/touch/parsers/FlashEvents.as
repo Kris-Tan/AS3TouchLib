@@ -53,10 +53,12 @@ package com.nuigroup.touch.parsers {
 					for each(var dsp:DisplayObject in objects) {
 						TouchCore.dispatchEvent(phase , pos, dsp , id , force);
 					};
+					// dispatch on stage
+					TouchCore.dispatchEvent(phase , pos, TouchManager.stage , id , force);
 				};
 				
 			} catch (er:Error) {
-				trace("parse error:FlashEvents");
+				trace("parse error:FlashEvents :" + er.message + "\n" + er.getStackTrace());
 			};
 			// write left bytes from stream
 			while (data.bytesAvailable) {

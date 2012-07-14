@@ -1,6 +1,7 @@
 package com.nuigroup.touch {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.InteractiveObject;
 	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.TouchEvent;
@@ -132,7 +133,7 @@ package com.nuigroup.touch {
 					break;
 			};
 			var local:Point = target.globalToLocal(point);
-			target.dispatchEvent(new TouchEvent(type , true , true , id, false , local.x , local.y , NaN , NaN , force));
+			target.dispatchEvent(new TouchEvent(type , true , false, id, false , local.x , local.y , 1 , 1 , force , target as InteractiveObject));
 		};
 		
 		/**
@@ -165,7 +166,8 @@ package com.nuigroup.touch {
 					break;
 			};
 			var local:Point = target.globalToLocal(point);
-			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y));
+			//trace(target,local);
+			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y, target as InteractiveObject , false , false , false , false , 0 , false , false , 0));
 		};
 		
 		
@@ -175,11 +177,12 @@ package com.nuigroup.touch {
 		 * @return					true if can be clicked , false if not
 		 */
 		protected static function mouseEnabled(target:DisplayObject):Boolean {
-			if (target is DisplayObject) {
+			/*if (target is DisplayObject) {
 				var loop:DisplayObjectContainer = target as DisplayObjectContainer;
 			}else {
 				loop = target.parent;
-			};
+			};*/
+			var loop:DisplayObjectContainer = target.parent;
 			while (loop) {
 				if (!loop.mouseChildren) {
 					return false;
