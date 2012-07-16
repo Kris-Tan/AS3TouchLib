@@ -4,6 +4,7 @@ package com.nuigroup.touch.parsers {
 	import com.nuigroup.touch.TouchManager;
 	import com.nuigroup.touch.TouchProtocol;
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	import flash.utils.IDataInput;
 	
@@ -49,9 +50,9 @@ package com.nuigroup.touch.parsers {
 					var force:Number = data.readFloat();
 					// dispatch on objects under point
 					var objects:Array = TouchCore.getObjects(pos);
-					// loop for each display object and dispatch event on accessables for mouse
+					// loop for each display object and dispatch event on accessables for mouse;
 					for each(var dsp:DisplayObject in objects) {
-						TouchCore.dispatchEvent(phase , pos, dsp , id , force);
+						TouchCore.dispatchEvent(phase , pos, dsp is InteractiveObject ? dsp : dsp.parent , id , force);
 					};
 					// dispatch on stage
 					TouchCore.dispatchEvent(phase , pos, TouchManager.stage , id , force);

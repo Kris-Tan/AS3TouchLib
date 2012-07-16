@@ -132,8 +132,10 @@ package com.nuigroup.touch {
 					type = TouchEvent.TOUCH_TAP;
 					break;
 			};
-			var local:Point = target.globalToLocal(point);
-			target.dispatchEvent(new TouchEvent(type , true , false, id, false , local.x , local.y , 1 , 1 , force , target as InteractiveObject));
+			
+			var dispatchOn:InteractiveObject = (target is InteractiveObject) ? target as InteractiveObject : target.parent;
+			var local:Point = dispatchOn.globalToLocal(point);
+			dispatchOn.dispatchEvent(new TouchEvent(type , false , false, id, false , local.x , local.y , 1 , 1 , force , dispatchOn));
 		};
 		
 		/**
