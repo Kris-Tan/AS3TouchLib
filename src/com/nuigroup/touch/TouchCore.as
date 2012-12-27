@@ -169,7 +169,7 @@ package com.nuigroup.touch {
 			};
 			var local:Point = target.globalToLocal(point);
 			//trace(target,local);
-			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y, target as InteractiveObject , false , false , false , false , 0 , false , false , 0));
+			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y, target as InteractiveObject , false , false , false , false , 0));
 		};
 		
 		
