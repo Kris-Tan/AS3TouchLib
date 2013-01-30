@@ -18,6 +18,9 @@ package com.nuigroup.touch.parsers {
 			
 		}
 		
+		protected var newData:Object = new Object();
+		protected var oldData:Object = new Object();
+		
 		public var touchData:Object = new Object();
 		
 		public function get name():String {
@@ -51,30 +54,24 @@ package com.nuigroup.touch.parsers {
 				// get actual time
 				var time:Number = (new Date).getTime();
 				// recived touchs index
-				var newStack:Object = new Object();
+				newData;
 				
 				//// data read loop
 				for (var i:int ; i < length ; i++ ) {
 					// get touch id
 					var id:int = data.readInt();
 					// check if touch exist in our index
-					var touch:Touch = touchData[id];
+					var touch:Touch = Touch.touches[id];
 					if (touch) {
 						// exist , so we move it to new location
-						touch.move(data.readFloat() * TouchManager.width , data.readFloat() * TouchManager.height );
-						// and remove it from old index
-						touchData[id] = null;
+						touch.move(data.readFloat() * TouchManager.width , data.readFloat() * TouchManager.height ,data.readFloat());
 					}else {
 						// not exist , so we create new touch instance
-						touch = new Touch( id , data.readFloat() * TouchManager.width , data.readFloat() * TouchManager.height , time );
+						touch = new Touch( id , data.readFloat() * TouchManager.width , data.readFloat() * TouchManager.height , time ,data.readFloat());
 					};
-					// add touch to new index
-					newStack[id] = touch;
 					// 2 floats about last x,y position are not neccessary , because Touch instance do it automaticly
 					data.readFloat();// touch.last.x
 					data.readFloat();//touch.last.y 
-					// additional touch value , depends on source it can be pressure or touch size
-					touch.force = data.readFloat();
 				};
 				// remove old touchs , dispatch end event
 				for each(touch in touchData) {
@@ -82,8 +79,6 @@ package com.nuigroup.touch.parsers {
 						touch.end(time);
 					};
 				};
-				// replace index
-				touchData = newStack;
 			}catch (er:Error) {
 				trace("read error: " ,er,er.getStackTrace());
 			};

@@ -2,6 +2,7 @@ package com.nuigroup.touch {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.TouchEvent;
@@ -53,6 +54,8 @@ package com.nuigroup.touch {
 			parse(e.target as Socket);
 		};
 		
+		
+		
 		////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////
 		
@@ -97,10 +100,8 @@ package com.nuigroup.touch {
 		 * @param	id				touch id
 		 * @param	force			for TouchEvent - pressure
 		 */
-		public static function dispatchEvent(phase:int , point:Point , target:DisplayObject , id:int = 0 , force:Number = 0):void {
-			if(mouseEnabled(target)){
-				EventDelegate(phase , point , target , id , force);
-			};
+		public static function dispatchEvent(target:InteractiveObject , phase:int , point:Point , id:int = 0 , force:Number = 0):void {
+			EventDelegate(target , phase , point , id , force);
 		};
 		
 		/**
@@ -111,7 +112,7 @@ package com.nuigroup.touch {
 		 * @param	id				touch id
 		 * @param	force			pressure
 		 */
-		public static function dispatchTouchEvent(phase:int , point:Point , target:DisplayObject , id:int, force:Number):void {
+		public static function dispatchTouchEvent(target:InteractiveObject , phase:int , point:Point , id:int, force:Number):void {
 			switch(phase) {
 				case DOWN:
 					var type:String = TouchEvent.TOUCH_BEGIN;
@@ -132,10 +133,8 @@ package com.nuigroup.touch {
 					type = TouchEvent.TOUCH_TAP;
 					break;
 			};
-			
-			var dispatchOn:InteractiveObject = (target is InteractiveObject) ? target as InteractiveObject : target.parent;
-			var local:Point = dispatchOn.globalToLocal(point);
-			dispatchOn.dispatchEvent(new TouchEvent(type , false , false, id, false , local.x , local.y , 1 , 1 , force , dispatchOn));
+			var local:Point = target.globalToLocal(point);
+			target.dispatchEvent(new TouchEvent(type , true , false , id , false , local.x , local.y , NaN , NaN , force , target ));
 		};
 		
 		/**
@@ -146,7 +145,7 @@ package com.nuigroup.touch {
 		 * @param	id				N/A
 		 * @param	force			N/A
 		 */
-		public static function dispatchMouseEvent(phase:int , point:Point , target:DisplayObject , id:int, force:Number):void {
+		public static function dispatchMouseEvent(target:InteractiveObject , phase:int , point:Point  , id:int, force:Number):void {
 			switch(phase) {
 				case DOWN:
 					var type:String = MouseEvent.MOUSE_DOWN;
@@ -168,8 +167,7 @@ package com.nuigroup.touch {
 					break;
 			};
 			var local:Point = target.globalToLocal(point);
-			//trace(target,local);
-			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y, target as InteractiveObject , false , false , false , false , 0 , false , false , 0));
+			target.dispatchEvent(new MouseEvent(type , true , false , local.x , local.y, target , false , false , false , false , 0));
 		};
 		
 		
@@ -178,12 +176,13 @@ package com.nuigroup.touch {
 		 * @param	target			target object
 		 * @return					true if can be clicked , false if not
 		 */
-		protected static function mouseEnabled(target:DisplayObject):Boolean {
+		/*
+		protected static function mouseEnabled(target:InteractiveObject):Boolean {
 			/*if (target is DisplayObject) {
 				var loop:DisplayObjectContainer = target as DisplayObjectContainer;
 			}else {
 				loop = target.parent;
-			};*/
+			};
 			var loop:DisplayObjectContainer = target.parent;
 			while (loop) {
 				if (!loop.mouseChildren) {
@@ -193,7 +192,7 @@ package com.nuigroup.touch {
 			};
 			return true;
 		};
-		
+		*/
 		
 		////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////
@@ -205,13 +204,24 @@ package com.nuigroup.touch {
 		 * @param	at			target position
 		 * @return				array of points
 		 */
-		public static function getObjects(at:Point):Array {
+		public static function getTarget(at:Point):InteractiveObject {
 			if (TouchManager.stage) {
-				return TouchManager.stage.getObjectsUnderPoint(at);
+				var target:* = TouchManager.stage.getObjectsUnderPoint(at).pop();
+				if(target){
+					target = target is InteractiveObject ? target : target.parent;
+					var parent:DisplayObjectContainer = target.parent;
+					while (!(parent is Stage)) {
+						if (parent.mouseChildren == false) {
+							target = parent;
+						};
+						parent = parent.parent;
+					};
+					return target;
+				}
 			} else {
 				trace("TouchCore::Error: add stage to TouchManager !");
 			};
-			return [];
+			return null;
 		};
 		
 	};

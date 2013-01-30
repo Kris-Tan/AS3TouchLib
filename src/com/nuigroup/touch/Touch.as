@@ -1,5 +1,6 @@
 package com.nuigroup.touch {
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
@@ -10,6 +11,21 @@ package com.nuigroup.touch {
 	 * @author Gerard Sławiński || turbosqel
 	 */
 	public class Touch {
+		
+		////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////
+		
+		//<------------------------- TOUCHES
+		
+		public static var touches:Array = new Array();
+		
+		public static function get freeTouchID():int {
+			var i:int = 0;
+			while (touches[i]) {
+				i++;
+			};
+			return i;
+		}
 		
 		////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +70,9 @@ package com.nuigroup.touch {
 		/**
 		 * actual elements on stage under touch point
 		 */
-		public var under:Array;
+		public var target:InteractiveObject;
+		
+		
 		
 		/**
 		 * recognized shape ID; for TUIO
@@ -73,18 +91,25 @@ package com.nuigroup.touch {
 		 * @param	y				y position
 		 * @param	initTime		initialize time
 		 */
-		public function Touch(id:int , x:Number , y:Number , initTime:Number) {
+		public function Touch(id:int , x:Number , y:Number , initTime:Number , force:Number = 0) {
 			// touch id and begin position
 			this.id = id;
+			// register touch ::
+			
+			if (id < touches.length  && touches[id]) {
+				// somethings left ?
+				touches[id].end(initTime);
+			};
+			touches[id] = this;
+			// touch data::
 			point.x = x;
 			point.y = y;
+			this.force = force;
 			// touch start time
 			this.initTime = initTime;
-			// get objects under position and dispatch Begin/MouseDown event
-			under = TouchCore.getObjects(point);
-			for each(var dsp:DisplayObject in under) {
-				TouchCore.dispatchEvent(0, point,dsp, id);
-			};
+			// get object under position and dispatch Begin/MouseDown event
+			target = TouchCore.getTarget(point);
+			dispatch(target , 0);
 		};
 		
 		////////////////////////////////////////////////////////////////////////////////
@@ -97,38 +122,26 @@ package com.nuigroup.touch {
 		 * @param	x		new x position
 		 * @param	y		new y position
 		 */
-		public function move(x:Number , y:Number):void {
+		public function move(x:Number , y:Number , force:Number = NaN):void {
 			// change new and last position (to not create new instances)
 			last.x = point.x;
 			last.y = point.y;
+			
+			if(!isNaN(force)){
+				this.force = force;
+			}
+			
 			point.x = x;
 			point.y = y;
-			// get points under new position
-			var toDispatch:Array = TouchCore.getObjects(point);
-			// loop through display objects
-			for each(var dsp:DisplayObject in toDispatch) {
-				// check if object was under point
-				var index:int = under.indexOf(dsp);
-				if (index == -1) {
-					// wasnt , so dispatch OVER event
-					TouchCore.dispatchEvent(1 ,point, dsp , id);
-				} else {
-					// was , so dispatch MOVE event
-					TouchCore.dispatchEvent(2 , point,dsp, id);
-					under[index] = null;
-				};
-			};
 			
-			for each (dsp in under) {
-				if (dsp) {
-					// rest of elements that we roll OUT
-					TouchCore.dispatchEvent(3 ,point, dsp,id);
-				};
+			var current:InteractiveObject = TouchCore.getTarget(point);
+			if (current == target) {
+				dispatch(target , 2);
+			} else {
+				dispatch(target , 3);
+				dispatch(current , 1);
+				target = current;
 			};
-			// change elements list
-			under.length = 0;
-			under = toDispatch;
-			
 		};
 		
 		
@@ -137,36 +150,44 @@ package com.nuigroup.touch {
 		 * @param	time		remove time
 		 */
 		public function end(time:Number):void {
+			dispatch(target , 4);
 			if (time - initTime < TAP_DELAY) {
-				// dispatch UP/END and TAP/CLICK
-				for each(var dsp:DisplayObject in under) {
-					TouchCore.dispatchEvent(4,point,dsp,id);
-					TouchCore.dispatchEvent(5,point,dsp,id);
-				};
-			}else {
-				// dispatch only UP/END
-				for each(dsp in under) {
-					TouchCore.dispatchEvent(4,point,dsp,id);
-				};
-			};
+				dispatch(target , 5);
+			}
 			// end touch
 			remove();
 		};
 		
+		
+		
+		
+		protected function dispatch(target:InteractiveObject , phase:int):void {
+			if (target) {
+				TouchCore.dispatchEvent( target , phase , point , id , force);
+			};
+		};
+		
+		
+		
+		
 		////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////
 		
-		//<------------------------- REMOVE
+		//<------------------------- REMOVE && UTIL
+		
+		
+		public function toString():String {
+			return "[ :Touch:  id:" + id + " , point:" + point + " , target:" + target + " ]";
+		};
+		
 		
 		/**
 		 * remove and release instances
 		 */
 		public function remove():void {
 			// if array exist - release and remove
-			if(under){
-				under.length = 0;
-				under = null;
-			};
+			touches[id] = null;
+			target = null;
 			point = null;
 			last = null;
 		};

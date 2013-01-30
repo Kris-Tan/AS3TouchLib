@@ -58,15 +58,15 @@ package com.nuigroup.touch.parsers
 						var touch:Touch = touchData[id];
 						if (touch) {
 							// touch exist , so we call move function
-							touch.move(Number(params[2].@VALUE) * TouchManager.width , Number(params[3].@VALUE) * TouchManager.height );
+							touch.move(Number(params[2].@VALUE) * TouchManager.width , Number(params[3].@VALUE) * TouchManager.height ,Number(params[6].@VALUE));
 							// and remove from old index
 							touchData[id] = null;
 						}else {
 							// create new touch
-							touch = new Touch( id , Number(params[2].@VALUE) * TouchManager.width , Number(params[3].@VALUE) * TouchManager.height  , time );
+							touch = new Touch( id , Number(params[2].@VALUE) * TouchManager.width , Number(params[3].@VALUE) * TouchManager.height  , time,Number(params[6].@VALUE) );
 						};
 						// read force param
-						touch.force = Number(params[6].@VALUE);
+						//touch.force = Number(params[6].@VALUE);
 						// touch add to new index
 						newStack[id] = touch;
 					};

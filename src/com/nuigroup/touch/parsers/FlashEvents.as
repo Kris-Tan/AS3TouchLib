@@ -1,5 +1,6 @@
 package com.nuigroup.touch.parsers {
 	import com.nuigroup.touch.ITouchParser;
+	import com.nuigroup.touch.Touch;
 	import com.nuigroup.touch.TouchCore;
 	import com.nuigroup.touch.TouchManager;
 	import com.nuigroup.touch.TouchProtocol;
@@ -29,6 +30,8 @@ package com.nuigroup.touch.parsers {
 		
 		public function parse(data:IDataInput):void {
 			try {
+				// current time::
+				var time:Number = (new Date()).getTime();
 				// check header
 				if ("FL" != data.readUTFBytes(2)) {
 					trace("invalid request , no FL header");
@@ -37,27 +40,35 @@ package com.nuigroup.touch.parsers {
 				// number of touches
 				var length:int = data.readShort();
 				// touch position holder
-				var pos:Point = new Point();
 				for (var i:int = 0 ; i < length ; i++ ) {
 					// read touch id
 					var id:int = data.readByte();
 					// read touch phase
 					var phase:int = data.readByte();
-					// read position (0-1) on stage ( x * stage.stageWidth )
-					pos.x = data.readFloat() * TouchManager.width;
-					pos.y = data.readFloat() * TouchManager.height;
-					// read touch force
-					var force:Number = data.readFloat();
-					// dispatch on objects under point
-					var objects:Array = TouchCore.getObjects(pos);
-					// loop for each display object and dispatch event on accessables for mouse;
-					for each(var dsp:DisplayObject in objects) {
-						TouchCore.dispatchEvent(phase , pos, dsp is InteractiveObject ? dsp : dsp.parent , id , force);
+					switch(phase) {
+						case 0 :
+							new Touch(id,data.readFloat() * TouchManager.width,data.readFloat() * TouchManager.height , time, data.readFloat());
+							break;
+						case 2 :
+							var t:Touch = Touch.touches[id];
+							if (t) {
+								t.move(data.readFloat() * TouchManager.width,data.readFloat() * TouchManager.height , data.readFloat());
+							}
+							break;
+						case 4:
+						case 5:
+							trace("close touch ::",id);
+							t = Touch.touches[id];
+							if (t) {
+								t.end(time);
+							}
+							
+							data.readFloat();
+							data.readFloat();
+							data.readFloat();
+							break;
 					};
-					// dispatch on stage
-					TouchCore.dispatchEvent(phase , pos, TouchManager.stage , id , force);
 				};
-				
 			} catch (er:Error) {
 				trace("parse error:FlashEvents :" + er.message + "\n" + er.getStackTrace());
 			};

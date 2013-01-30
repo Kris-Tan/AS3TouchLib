@@ -1,4 +1,5 @@
 package {
+	import com.nuigroup.touch.debug.DebugTouchDraw;
 	import com.nuigroup.touch.emulator.EventCheckBox;
 	import com.nuigroup.touch.TouchManager;
 	import com.nuigroup.touch.TouchOutput;
@@ -12,6 +13,7 @@ package {
 		
 		public function TouchTest():void {
 			
+			DebugTouchDraw.stage = stage;
 			
 			var spr:EventCheckBox = new EventCheckBox();
 			spr.x = 400;

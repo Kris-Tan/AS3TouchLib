@@ -1,5 +1,7 @@
 package com.nuigroup.touch.debug {
 	import flash.display.Sprite;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	/**
@@ -14,10 +16,15 @@ package com.nuigroup.touch.debug {
 		protected var interval:Number = NaN;
 		
 		
-		public function TouchView() {
+		public function TouchView(id:int = 0) {
 			graphics.beginFill(color, 0.8);
 			graphics.drawCircle(0, 0, size);
 			graphics.endFill();
+			var tf:TextField = new TextField();
+			tf.text = String(id);
+			tf.autoSize = TextFieldAutoSize.CENTER;
+			tf.x = tf.width / 2;
+			tf.y = tf.height / 2;
 		}
 		
 		public function replace(x:Number , y:Number):void {

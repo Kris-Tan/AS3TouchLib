@@ -16,9 +16,9 @@ package com.nuigroup.touch.debug
 		 */
 		public static function set stage(s:Stage):void {
 			if (s == null && _stage) {
-				_stage.removeEventListener(TouchEvent.TOUCH_BEGIN , makeMove);
-				_stage.removeEventListener(TouchEvent.TOUCH_END , makeMove);
-				_stage.removeEventListener(TouchEvent.TOUCH_MOVE, makeMove);
+				_stage.removeEventListener(TouchEvent.TOUCH_BEGIN , makeMove , true);
+				_stage.removeEventListener(TouchEvent.TOUCH_END , makeMove , true);
+				_stage.removeEventListener(TouchEvent.TOUCH_MOVE, makeMove , true);
 				_stage = null;
 				for each(var v:TouchView in touches) {
 					v.remove();
@@ -26,9 +26,9 @@ package com.nuigroup.touch.debug
 				touches.length = 0;
 			} else {
 				_stage = s;
-				_stage.addEventListener(TouchEvent.TOUCH_BEGIN , makeMove);
-				_stage.addEventListener(TouchEvent.TOUCH_END , makeMove);
-				_stage.addEventListener(TouchEvent.TOUCH_MOVE, makeMove);
+				_stage.addEventListener(TouchEvent.TOUCH_BEGIN , makeMove, true);
+				_stage.addEventListener(TouchEvent.TOUCH_END , makeMove , true);
+				_stage.addEventListener(TouchEvent.TOUCH_MOVE, makeMove , true);
 			}
 		}
 		
@@ -47,7 +47,7 @@ package com.nuigroup.touch.debug
 						touches[id].remove();
 						touches[id] = null;
 					}
-					var t:TouchView = new TouchView();
+					var t:TouchView = new TouchView(e.touchPointID);
 					touches[id] = t;
 					t.replace(e.stageX,e.stageY);
 					t.pressure(e.pressure);
