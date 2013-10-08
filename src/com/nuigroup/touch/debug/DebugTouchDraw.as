@@ -40,6 +40,7 @@ package com.nuigroup.touch.debug
 		protected static var _stage:Stage;
 		protected static var touches:Array = new Array();
 		protected static function makeMove(e:TouchEvent):void {
+			trace("draw make move");
 			var id:int = e.touchPointID;
 			switch(e.type) {
 				case TouchEvent.TOUCH_BEGIN :
@@ -57,7 +58,7 @@ package com.nuigroup.touch.debug
 					if (touches[id]) {
 						touches[id].pressure(e.pressure);
 						touches[id].replace(e.stageX,e.stageY);
-					};
+					}
 					return;
 				case TouchEvent.TOUCH_END :
 					if (touches[id]) {

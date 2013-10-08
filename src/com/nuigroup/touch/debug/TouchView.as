@@ -25,6 +25,7 @@ package com.nuigroup.touch.debug {
 			tf.autoSize = TextFieldAutoSize.CENTER;
 			tf.x = tf.width / 2;
 			tf.y = tf.height / 2;
+			alpha = 0.5;
 		}
 		
 		public function replace(x:Number , y:Number):void {
@@ -45,10 +46,10 @@ package com.nuigroup.touch.debug {
 		public function remove():void {
 			if (parent) {
 				parent.removeChild(this);
-			};
+			}
 			if (!isNaN(interval)) {
 				clearTimeout(interval);
-			};
+			}
 		}
 		
 	}

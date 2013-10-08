@@ -18,7 +18,7 @@ package com.nuigroup.airtouch {
 			TouchManager.inputMode = TouchProtocol.TUIO;
 			TouchManager.outputMode = outputMode;
 			new TuioUDPSocket(port);
-		};
+		}
 		
 	}
 

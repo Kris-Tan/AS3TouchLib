@@ -18,6 +18,22 @@ package com.nuigroup.touch.parsers {
 		public function FlashEvents() {
 			
 		}
+		/**
+		 * 
+		 * endian = LITTLE_ENDIAN
+		 * operation 				// bytes
+		 * 
+		 * header:
+		 * writeUTFBytes("FL") 		// 2
+		 * writeShort(numTouchs)	// 2 
+		 * loop:
+		 * writeByte(id) 			// 1 (touch num)
+		 * writeByte(phase)			// 1 (phase 0-down , 2-move , 4-up , 5-tap)
+		 * writeFloat(x) 			// 4 ( x position in 0-1 value )
+		 * writeFloat(y) 			// 4 ( y position in 0-1 value )
+		 * writeFload(pressure)		// 4 ( force in 0-1 value )
+		 * 
+		 */
 		
 		
 		public function get name():String {
@@ -39,6 +55,7 @@ package com.nuigroup.touch.parsers {
 				};
 				// number of touches
 				var length:int = data.readShort();
+				trace("FL numtouchs:",length);
 				// touch position holder
 				for (var i:int = 0 ; i < length ; i++ ) {
 					// read touch id
@@ -47,17 +64,16 @@ package com.nuigroup.touch.parsers {
 					var phase:int = data.readByte();
 					switch(phase) {
 						case 0 :
-							new Touch(id,data.readFloat() * TouchManager.width,data.readFloat() * TouchManager.height , time, data.readFloat());
+							var t:Touch = new Touch(id,data.readFloat(),data.readFloat() , time, data.readFloat());
 							break;
 						case 2 :
-							var t:Touch = Touch.touches[id];
+							t = Touch.touches[id];
 							if (t) {
-								t.move(data.readFloat() * TouchManager.width,data.readFloat() * TouchManager.height , data.readFloat());
+								t.move(data.readFloat(),data.readFloat() , data.readFloat());
 							}
 							break;
 						case 4:
 						case 5:
-							trace("close touch ::",id);
 							t = Touch.touches[id];
 							if (t) {
 								t.end(time);
@@ -67,16 +83,17 @@ package com.nuigroup.touch.parsers {
 							data.readFloat();
 							data.readFloat();
 							break;
-					};
-				};
+					}
+					trace("loop:",id,phase,t);
+				}
 			} catch (er:Error) {
 				trace("parse error:FlashEvents :" + er.message + "\n" + er.getStackTrace());
-			};
+			}
 			// write left bytes from stream
 			while (data.bytesAvailable) {
 				data.readByte();
-			};
-		};
+			}
+		}
 		
 	}
 

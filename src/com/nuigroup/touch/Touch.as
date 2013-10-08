@@ -133,7 +133,6 @@ package com.nuigroup.touch {
 			
 			point.x = x;
 			point.y = y;
-			
 			var current:InteractiveObject = TouchCore.getTarget(point);
 			if (current == target) {
 				dispatch(target , 2);
@@ -141,8 +140,8 @@ package com.nuigroup.touch {
 				dispatch(target , 3);
 				dispatch(current , 1);
 				target = current;
-			};
-		};
+			}
+		}
 		
 		
 		/**
@@ -162,10 +161,11 @@ package com.nuigroup.touch {
 		
 		
 		protected function dispatch(target:InteractiveObject , phase:int):void {
-			if (target) {
+			TouchCore.dispatchEvent( TouchManager.stage , phase , point , id , force);
+			if (target && (phase == 1 || phase == 3)) {
 				TouchCore.dispatchEvent( target , phase , point , id , force);
-			};
-		};
+			}
+		}
 		
 		
 		

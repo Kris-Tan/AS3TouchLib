@@ -165,7 +165,7 @@ package com.nuigroup.touch {
 		 * @param	s		target tcp socket
 		 */
 		public static function addSocket(s:Socket):void {
-			s.endian = Endian.LITTLE_ENDIAN;
+			//s.endian = Endian.LITTLE_ENDIAN;
 			s.addEventListener(ProgressEvent.SOCKET_DATA , TouchCore.reciveData);
 		};
 		
@@ -231,15 +231,15 @@ package com.nuigroup.touch {
 		 * return stage width
 		 */
 		static public function get width():Number {
-			return stage ? stage.stageWidth : 0;
-		};
+			return stage ? stage.stageWidth : 1;
+		}
 		
 		/**
 		 * return stage height
 		 */
 		static public function get height():Number {
-			return stage ? stage.stageHeight : 0;
-		};
+			return stage ? stage.stageHeight : 1;
+		}
 		
 		////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////
