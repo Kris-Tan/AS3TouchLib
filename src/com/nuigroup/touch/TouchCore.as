@@ -101,13 +101,7 @@ package com.nuigroup.touch {
 		 * @param	force			for TouchEvent - pressure
 		 */
 		public static function dispatchEvent(target:InteractiveObject , phase:int , point:Point , id:int = 0 , force:Number = 0):void {
-			trace("dispatch::",target , phase);
-			//if(phase != 1 && phase != 3){
-			//	EventDelegate( TouchManager.stage , phase , point , id , force);
-			//} else {
 			EventDelegate(target , phase , point , id , force);
-			//}
-			//
 		};
 		
 		/**
