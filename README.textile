@@ -1,10 +1,6 @@
 h1. 		:: AS3TouchLib ::
 
 
-h2. If You like to use latest lib , please contact me by email . Thare are some key changes I didnt upload yet.
-
-
-
 h4. Small , easy to use , pure AS3 library for reading touch data and dispatching Touch or Mouse events on DisplayObjects .
 Library allow to add own extensions and data parsers , so You dont have to edit any file to setup own data types .
 
@@ -16,6 +12,11 @@ h4. This is stable release .
 
 .
 
+h4. References :
+
+h5. Connecting touch device with pc example : http://turbosqel.pl/blog/as3touchlib/
+
+.
 
 h3. @ Formats :
 
