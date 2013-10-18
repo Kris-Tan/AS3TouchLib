@@ -161,9 +161,10 @@ package com.nuigroup.touch {
 		
 		
 		protected function dispatch(target:InteractiveObject , phase:int):void {
-			TouchCore.dispatchEvent( TouchManager.stage , phase , point , id , force);
-			if (target && (phase == 1 || phase == 3)) {
+			if(target){
 				TouchCore.dispatchEvent( target , phase , point , id , force);
+			} else {
+				TouchCore.dispatchEvent( TouchManager.stage , phase , point , id , force);
 			}
 		}
 		

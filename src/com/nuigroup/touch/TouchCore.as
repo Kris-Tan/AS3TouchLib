@@ -135,7 +135,7 @@ package com.nuigroup.touch {
 			};
 			var local:Point = target.globalToLocal(point);
 			target.dispatchEvent(new TouchEvent(type , true , false , id , false , local.x , local.y , NaN , NaN , force , target ));
-		};
+		}
 		
 		/**
 		 * dispatch mouse event on target object

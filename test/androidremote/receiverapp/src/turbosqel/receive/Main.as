@@ -2,11 +2,13 @@ package turbosqel.receive
 {
 	import com.nuigroup.airtouch.TouchEventSocket;
 	import com.nuigroup.touch.debug.DebugTouchDraw;
+	import com.nuigroup.touch.emulator.EventCheckBox;
 	import com.nuigroup.touch.TouchManager;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.events.ServerSocketConnectEvent;
+	import flash.events.TouchEvent;
 	import flash.net.ServerSocket;
 	import flash.net.Socket;
 	import flash.text.TextField;
@@ -30,8 +32,12 @@ package turbosqel.receive
 			
 			server= new ServerSocket();
 			
-			setTimeout(initserv,500);
+			
+			var box:EventCheckBox = new EventCheckBox();
+			box.x = box.y = 100;
+			addChild(box);
 		}
+		
 		public function initserv():void{
 			server.addEventListener(ServerSocketConnectEvent.CONNECT , onSocket);
 			server.addEventListener(Event.CLOSE , trace);
@@ -44,15 +50,6 @@ package turbosqel.receive
 		private function onSocket(e:ServerSocketConnectEvent):void {
 			out.appendText("\nsocket connected.");
 			TouchEventSocket.listen(stage,e.socket);
-		}
-		
-		private function onProg(e:ProgressEvent):void {
-			var s:Socket = e.target as Socket;
-			trace(s.bytesAvailable , e.bytesLoaded, e.bytesTotal);
-			trace(s.readUTFBytes(2));
-			while (s.bytesAvailable) {
-				s.readByte();
-			}
 		}
 		
 	}

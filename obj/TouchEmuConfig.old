@@ -16,16 +16,28 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'2012-07-21'</value>
+      <value>'2013-10-18'</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::air</name>
+      <value>false</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::mobile</name>
+      <value>false</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::desktop</name>
+      <value>false</value>
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
-      <path-element>C:\Documents and Settings\G43\gits\AS3TouchLib\src</path-element>
-      <path-element>E:\FlashDevelop\Library\AS3\classes</path-element>
+      <path-element>D:\development\gits\AS3TouchLib\src</path-element>
+      <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
   </compiler>
   <file-specs>
-    <path-element>C:\Documents and Settings\G43\gits\AS3TouchLib\src\TouchTest.as</path-element>
+    <path-element>D:\development\gits\AS3TouchLib\src\TouchTest.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>

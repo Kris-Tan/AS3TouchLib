@@ -55,7 +55,6 @@ package com.nuigroup.touch.parsers {
 				};
 				// number of touches
 				var length:int = data.readShort();
-				trace("FL numtouchs:",length);
 				// touch position holder
 				for (var i:int = 0 ; i < length ; i++ ) {
 					// read touch id
@@ -84,7 +83,6 @@ package com.nuigroup.touch.parsers {
 							data.readFloat();
 							break;
 					}
-					trace("loop:",id,phase,t);
 				}
 			} catch (er:Error) {
 				trace("parse error:FlashEvents :" + er.message + "\n" + er.getStackTrace());
